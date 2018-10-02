@@ -78,7 +78,7 @@ typings/
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 
-.idea/**
+.idea
 
 
 
@@ -111,4 +111,6 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+dist
 

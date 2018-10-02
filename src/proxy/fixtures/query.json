@@ -1,0 +1,33 @@
+{
+  "type": "file",
+  "$or": [
+    {
+      "name": {
+        "$match": "*.jar"
+      }
+    },
+    {
+      "name": {
+        "$match": "*.tar.gz"
+      }
+    },
+    {
+      "name": {
+        "$match": "*.zip"
+      }
+    }
+  ],
+  "$or": [
+    {
+      "stat.downloaded": {
+        "$lt": "${thresholdTime}"
+      }
+    }
+  ],
+  "created_by": {
+    "$ne": "_system_"
+  },
+  "repo": {
+    "$match": "*-local"
+  }
+}
