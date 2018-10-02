@@ -18,7 +18,7 @@ Options:
   -u, --user, --user                        Artifactory user with permission to
                                             API                       [required]
   -q, --quiet, --quiet                      Quiet down output          [boolean]
-  -t, --token, --token                      Artifactory user's generated token
+  -t, --token, --token                      Artifactory user`s generated token
                                                                       [required]
   -f, --filter, --filter                    Path prefix filter
   -d, --date, --date                        Threshold date (ISO-8610 format)
