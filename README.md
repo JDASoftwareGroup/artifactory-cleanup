@@ -8,7 +8,7 @@ $ npm install -g artifactory-cleanup
 
 ## Usage
 
-```sh
+```
 artifactory-cleanup [options]
 
 Options:
@@ -29,6 +29,3 @@ Options:
 
 ```
 
-## License
-
-MIT © [Gabriel Kohen](https://github.com/gkohen)
