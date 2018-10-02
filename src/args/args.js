@@ -65,6 +65,7 @@ function getBaseYargs() {
                 describe: 'Dry run of the utility. Not files will be deleted'
             })
             .check(checkDependencies, false)
+            .wrap(argv.terminalWidth())
             .exitProcess(false).argv;
     } catch (error) {
         process.exit(1);

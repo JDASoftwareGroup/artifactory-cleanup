@@ -106,6 +106,7 @@ describe('Test argv setting', () => {
         jest.spyOn(yargs, 'option').mockImplementation(() => yargsMockValues);
         jest.spyOn(yargs, 'help').mockImplementation(() => yargsMockValues);
         jest.spyOn(yargs, 'check').mockImplementation(() => yargsMockValues);
+        jest.spyOn(yargs, 'wrap').mockImplementation(() => yargsMockValues);
         if (mockExit) {
             jest.spyOn(yargs, 'exitProcess').mockImplementation(() => yargsMockValues);
         }
