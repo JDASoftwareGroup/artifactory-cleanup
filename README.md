@@ -17,7 +17,7 @@ Options:
   -a, --artifactoryApiUrl  Artifactory server API URL                                                                                              [required]
   -u, --user               Artifactory user with permission to API                                                                                 [required]
   -q, --quiet              Quiet down output                                                                                                        [boolean]
-  -t, --token              Artifactory user's generated token                                                                                      [required]
+  -t, --token              Artifactory user generated token                                                                                      [required]
   -f, --filter             Path prefix filter
   -l, --logging            logging level                                                      [choices: "error", "warn", "info", "verbose", "debug", "silly"]
   -d, --date               Threshold date (ISO-8610 format)

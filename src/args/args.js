@@ -26,7 +26,7 @@ function getBaseYargs() {
             .option('t', {
                 alias:    'token',
                 demand:   true,
-                describe: 'Artifactory user\'s generated token'
+                describe: 'Artifactory user generated token'
             })
             .option('f', {
                 alias:    'filter',
