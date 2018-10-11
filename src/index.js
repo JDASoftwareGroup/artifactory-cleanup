@@ -40,7 +40,8 @@ import args from "./args";
         }
         let dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
 
-        logger.info("%sTotal of %s were deleted for a threshold of: %s and filter of %s", dryrunPrefix, filesize(response.totalSize), moment(response.thresholdTime).format('LLL'), args.getPrefixFilter());
+        logger.info("%sTotal of %s were deleted for a threshold of: %s and filter of %s for repositories", dryrunPrefix, filesize(response.totalSize), moment(response.thresholdTime).format('LLL'),
+                    args.getPrefixFilter()? args.getPrefixFilter(): 'NONE');
 
     } catch (error) {
         console.error(error);
