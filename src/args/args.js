@@ -93,22 +93,18 @@ function getLoggingLevels() {
 
 function getConnectionUrl() {
     return getBaseYargs().a;
-    //   return 'https://jdasoftware.jfrog.io/jdasoftware/api';
 }
 
 function getUserName() {
     return getBaseYargs().u;
-    //   return 'gabriel.kohen@jda.com';
 }
 
 function getToken() {
     return getBaseYargs().t;
-    //   return 'AKCp5bBD3mViHiuiHNQxDjGMP6xMf7qfFSAM8QpjqqUy5qGRYt9fRmWD2jRZW648eoAYb19hs';
 }
 
 function getLoggingLevel() {
     return getBaseYargs().l;
-    //   return 'AKCp5bBD3mViHiuiHNQxDjGMP6xMf7qfFSAM8QpjqqUy5qGRYt9fRmWD2jRZW648eoAYb19hs';
 }
 
 function getConnectionDefaults() {
