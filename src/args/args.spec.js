@@ -10,7 +10,8 @@ const MOCK_DATE_THESHOLD_SETTING = '2008-09-15T15:53:00+05:00';
 const MOCK_UNIT_THESHOLD_SETTING = 'years';
 const MOCK_KEEP_THESHOLD_SETTING = 4;
 const MOCK_DURATION_THESHOLD_SETTING = 5;
-const MOCK_PREFIX_FILTER_SETTING = '/my/repostiory';
+const MOCK_PREFIX_FILTER_SETTING = '/my/path';
+const MOCK_REPOSITORY_FILTER_SETTING = '/my/repository';
 
 
 describe('Test argv setting', () => {
@@ -69,6 +70,11 @@ describe('Test argv setting', () => {
             expect(args.getPrefixFilter()).toBe(MOCK_PREFIX_FILTER_SETTING);
         });
 
+
+        test('setting of repository filter', () => {
+            expect(args.getRepositoryFilter()).toBe(MOCK_REPOSITORY_FILTER_SETTING);
+        });
+
         test('setting of keep threshold', () => {
             expect(args.getThresholdKeep()).toBe(MOCK_KEEP_THESHOLD_SETTING);
         });
@@ -125,7 +131,8 @@ describe('Test argv setting', () => {
                 'n': MOCK_UNIT_THESHOLD_SETTING,
                 'o': MOCK_DURATION_THESHOLD_SETTING,
                 'k': MOCK_KEEP_THESHOLD_SETTING,
-                'f': MOCK_PREFIX_FILTER_SETTING
+                'p': MOCK_PREFIX_FILTER_SETTING,
+                'f': MOCK_REPOSITORY_FILTER_SETTING
             }
         }, yargs)
     }

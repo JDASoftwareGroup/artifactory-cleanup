@@ -22,15 +22,17 @@ import args from "./args";
         let response = await proxy.getArtifacts(threshold);
         let shouldDelete = true;
         let deleteConfirmationAnswer;
-        let isDryRun = args.isDryRun();
+        let isDryRun = args.isDryRun()? true: false;
         if (!args.isQuiet() && !isDryRun) {
             try {
                 deleteConfirmationAnswer = await inquirer.prompt({
-                    'type':    'confirm',
-                    'name':    'deleteConfirmation',
-                    'message': chalk.whiteBright.bgRed('Are you sure you want to delete the above artifacts?')
-                });
-            } catch (error) {
+                                                                     'type':    'confirm',
+                                                                     'name':    'deleteConfirmation',
+                                                                     'message': chalk.whiteBright.bgRed(
+                                                                         'Are you sure you want to delete the above artifacts?')
+                                                                 });
+            }
+            catch (error) {
                 deleteConfirmationAnswer = { deleteConfirmation: false }
             }
             shouldDelete = deleteConfirmationAnswer.deleteConfirmation;
@@ -39,11 +41,14 @@ import args from "./args";
             await proxy.deleteArtifacts(response.items, isDryRun);
         }
         let dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
+        let dryRunCaption = isDryRun ? chalk.white.underline.bold('DRY RUN:') : '';
 
-        logger.info("%sTotal of %s were deleted for a threshold of: %s and filter of %s for repositories", dryrunPrefix, filesize(response.totalSize), moment(response.thresholdTime).format('LLL'),
-                    args.getPrefixFilter()? args.getPrefixFilter(): 'NONE');
+        logger.info("%s %s Total of %s were deleted for a threshold of: %s and filter of %s for repositories", dryrunPrefix,
+                    dryRunCaption, filesize(response.totalSize), moment(response.thresholdTime).format('LLL'),
+                    args.getPrefixFilter() ? args.getPrefixFilter() : 'NONE');
 
-    } catch (error) {
+    }
+    catch (error) {
         console.error(error);
         process.exitCode = 1;
     }

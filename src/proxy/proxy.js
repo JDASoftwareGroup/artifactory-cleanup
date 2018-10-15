@@ -71,11 +71,12 @@ function getResultMap(results) {
         }));
         let currentSize = grandparentArtifact.size;
         if (thresholdKeep) {
-            let truncatedArtifacts= [...sortedArtifacts.entries()];
-            truncatedArtifacts.length = Math.min(thresholdKeep,truncatedArtifacts.length);
+            let truncatedArtifacts = [...sortedArtifacts.entries()];
+            truncatedArtifacts.length = Math.min(thresholdKeep, truncatedArtifacts.length);
             sortedArtifacts = new Map(truncatedArtifacts);
         }
-        let adjustedSize = [...sortedArtifacts.values()].reduce((sum, currentArtifact) => sum + currentArtifact.size, 0);
+        let adjustedSize = [...sortedArtifacts.values()].reduce((sum, currentArtifact) => sum + currentArtifact.size,
+                                                                0);
         grandparentArtifact.size = adjustedSize;
         totalSize += grandparentArtifact.size;
 
@@ -127,8 +128,10 @@ async function getArtifacts(olderThan) {
     }
     logger.verbose('threshold=%s', thresholdTime.format());
     const compiledQuery = _.template(JSON.stringify(queryText))({
+                                                                    filter:        args.getRepositoryFilter(),
                                                                     thresholdTime: thresholdTime.format()
                                                                 });
+    logger.info('compiled query\n%s',compiledQuery);
     const query = `items.find(${compiledQuery})`;
     let foundItemsResult;
     try {
