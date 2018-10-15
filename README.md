@@ -32,6 +32,6 @@ Options:
 
 ## Example
 
- <img width="400" src="./screen.png">
+![Example](./screen.png)
 
 
