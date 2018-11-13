@@ -30,6 +30,11 @@ function getBaseYargs() {
             })
             .option('f', {
                 alias:    'filter',
+                default:  '*-local',
+                describe: 'Repository filter'
+            })
+            .option('p', {
+                alias:    'path',
                 describe: 'Path prefix filter'
             })
             .option('l', {
@@ -143,6 +148,11 @@ function isQuiet() {
 
 
 function getPrefixFilter() {
+    return getBaseYargs().p;
+}
+
+
+function getRepositoryFilter() {
     return getBaseYargs().f;
 }
 
@@ -156,5 +166,6 @@ module.exports = {
     getThresholdDate,
     getThresholdKeep,
     checkDependencies,
-    getPrefixFilter
+    getPrefixFilter,
+    getRepositoryFilter
 };
