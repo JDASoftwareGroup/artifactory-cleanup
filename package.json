@@ -45,7 +45,7 @@
     "chalk": "2.4.1",
     "dotenv": "6.2.0",
     "error-ex": "1.3.2",
-    "eslint": "5.9.0",
+    "eslint": "5.10.0",
     "figlet": "1.2.1",
     "filesize": "3.6.1",
     "inquirer": "6.2.1",
