@@ -1,5 +1,12 @@
 # artifactory-cleanup
 
+<p align="center">
+    <a href="https://travis-ci.com/JDASoftwareGroup/artifactory-cleanup"><img src="https://travis-ci.com/JDASoftwareGroup/artifactory-cleanup.svg?branch=master" alt="Travis Build Status"></a>
+    <a href="https://codecov.io/gh/JDASoftwareGroup/artifactory-cleanup"><img src="https://codecov.io/gh/JDASoftwareGroup/artifactory-cleanup/branch/master/graph/badge.svg" alt="Codecov badge"></a>
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/mashape/apistatus.svg" alt="MIT"></a>
+    <a href="https://github.com/JDASoftwareGroup/artifactory-cleanup/pulls"><img src="https://img.shields.io/badge/PRs%20-welcome-brightgreen.svg" alt="PR's welcome"></a>
+</p>
+
 ## Background
 In a development organization dependency management is key to sharing 3<sup>rd</sup> party and in-house common libraries 
 as well as build artifacts to be deployed to the cloud and in-premise. Artifactory, by JFrog is such as solution that is 
