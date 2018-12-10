@@ -1,5 +1,7 @@
 module.exports = {
   "testEnvironment": "node",
+  "coverageDirectory": "./coverage/",
+  "collectCoverage": true,
   "coverageReporters": [
     "html",
     "lcovonly",
