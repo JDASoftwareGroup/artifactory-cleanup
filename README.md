@@ -7,6 +7,9 @@
     <a href="https://github.com/JDASoftwareGroup/artifactory-cleanup/pulls"><img src="https://img.shields.io/badge/PRs%20-welcome-brightgreen.svg" alt="PR's welcome"></a>
 </p>
 
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJDASoftwareGroup%2Fartifactory-cleanup.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FJDASoftwareGroup%2Fartifactory-cleanup?ref=badge_large)
+
 ## Background
 In a development organization dependency management is key to sharing 3<sup>rd</sup> party and in-house common libraries 
 as well as build artifacts to be deployed to the cloud and in-premise. Artifactory, by JFrog is such as solution that is 
@@ -65,6 +68,7 @@ Options:
 ## Example
 
 ![Example](screen.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJDASoftwareGroup%2Fartifactory-cleanup.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FJDASoftwareGroup%2Fartifactory-cleanup?ref=badge_shield)
 
 ## Contributing
 
@@ -83,6 +87,3 @@ See also the list of [contributors](https://github.com/jda/artifactory-cleanup/c
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
-
-
-
