@@ -33,8 +33,7 @@
     "cleanup"
   ],
   "jestSonar": {
-    "reportPath": "coverage",
-    "reportFile": "test-reporter.xml"
+    "reportPath": "coverage"
   },
   "dependencies": {
     "axios": "0.18.0",
