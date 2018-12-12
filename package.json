@@ -1,9 +1,9 @@
 {
   "name": "artifactory-cleanup",
   "description": "Artifactory Cleanup",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Gabriel Kohen (https://github.com/gkohen)",
-  "repository": "Gabriel%20Kohen/artifactory-cleanup",
+  "repository": "https://github.com/JDASoftwareGroup/artifactory-cleanup",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Gabriel%20Kohen/artifactory-cleanup/issues"
@@ -16,8 +16,8 @@
     "npm": ">=5"
   },
   "scripts": {
-    "test": "jest --coverage --silent src ",
-    "coverage": "jest --collectCoverageFrom=src/**.js --coverage",
+    "test": "jest --coverage --silent src",
+    "coverage": "jest --coverage --silent src && codecov",
     "postinstall": "npm run build",
     "build": "babel src --out-dir dist --ignore Procfile,node_modules,test,*.spec.js,*.sh --no-comments --copy-files",
     "lint": "eslint src/**",
@@ -56,7 +56,8 @@
     "babel-preset-env": "1.7.0",
     "babel-watch": "2.0.7",
     "chalk": "2.4.1",
-    "eslint": "5.9.0",
+    "codecov": "^3.1.0",
+    "eslint": "5.10.0",
     "jest-cli": "23.6.0",
     "nodemon": "1.18.7"
   }
