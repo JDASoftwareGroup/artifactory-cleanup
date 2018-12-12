@@ -1,7 +1,11 @@
 language: node_js
 node_js:
   - stable
-cache: npm
+cache:
+  npm: true
+  yarn: true
+  directories:
+    - '$HOME/.sonar/cache'
 addons:
   sonarcloud:
     organization: "jdasoftwaregroup"
