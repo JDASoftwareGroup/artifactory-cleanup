@@ -16,5 +16,9 @@ module.exports = {
       "statements": 100
     }
   },
-  "testResultsProcessor": "jest-sonar-reporter"
+  "testResultsProcessor": "jest-sonar-reporter",
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "test-reporter.xml"
+  }
 };
