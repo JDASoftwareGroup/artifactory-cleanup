@@ -32,6 +32,10 @@
     "artifactory",
     "cleanup"
   ],
+  "jestSonar": {
+    "reportPath": "coverage",
+    "reportFile": "test-reporter.xml"
+  },
   "dependencies": {
     "axios": "0.18.0",
     "axios-mock-adapter": "1.15.0",
