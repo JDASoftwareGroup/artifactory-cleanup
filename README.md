@@ -4,7 +4,6 @@
     <a href="https://travis-ci.com/JDASoftwareGroup/artifactory-cleanup"><img src="https://travis-ci.com/JDASoftwareGroup/artifactory-cleanup.svg?branch=master" alt="Travis Build Status"></a>
     <a href="https://codecov.io/gh/JDASoftwareGroup/artifactory-cleanup"><img src="https://codecov.io/gh/JDASoftwareGroup/artifactory-cleanup/branch/master/graph/badge.svg" alt="Codecov badge"></a>
     <a href="https://app.codacy.com/app/gkohen/artifactory-cleanup?utm_source=github.com&utm_medium=referral&utm_content=JDASoftwareGroup/artifactory-cleanup&utm_campaign=Badge_Grade_Dashboard"><img src="https://api.codacy.com/project/badge/Grade/b10e3ad8327649159329c2093b3f8301" alt="Code quality"></a>
-
     <a href="https://sonarcloud.io/component_measures?id=JDASoftwareGroup_artifactory-cleanup&metric=code_smells"><img src="https://sonarcloud.io/api/project_badges/measure?project=JDASoftwareGroup_artifactory-cleanup&metric=code_smells" alt="Code Smells"></a>
     <a href="https://sonarcloud.io/component_measures?id=JDASoftwareGroup_artifactory-cleanup&metric=reliability_rating"><img src="https://sonarcloud.io/api/project_badges/measure?project=JDASoftwareGroup_artifactory-cleanup&metric=reliability_rating" alt="Reliability Rating"></a>
     <a href="https://sonarcloud.io/component_measures?id=JDASoftwareGroup_artifactory-cleanup&metric=vulnerabilities"><img src="https://sonarcloud.io/api/project_badges/measure?project=JDASoftwareGroup_artifactory-cleanup&metric=vulnerabilities" alt="Vulnerabilities"></a>
