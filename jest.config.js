@@ -1,6 +1,14 @@
 module.exports = {
   "testEnvironment": "node",
   "coverageDirectory": "./coverage/",
+    "collectCoverageFrom": [
+        "src/**/*.{js}",
+        "!src/**/*.{.spec.js}",
+        "!src/**/index.js"
+    ],
+    "testPathIgnorePatterns": [
+        "<rootDir>/(commonjs|coverage|node_modules|tools|umd)/"
+    ],
   "collectCoverage": true,
   "coverageReporters": [
     "html",
@@ -16,5 +24,6 @@ module.exports = {
       "statements": 100
     }
   },
-  "testResultsProcessor": "jest-sonar-reporter"
+  "testResultsProcessor": "jest-sonar-reporter",
+  "setupTestFrameworkScriptFile": "jest-mock-console/dist/setupTestFramework.js"
 };

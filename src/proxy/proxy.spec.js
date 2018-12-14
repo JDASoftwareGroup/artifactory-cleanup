@@ -248,6 +248,5 @@ describe('Proxy Artifactory requests', () => {
         args.getPrefixFilter = () => undefined;
         mockLogger();
         return args;
-
     }
 });

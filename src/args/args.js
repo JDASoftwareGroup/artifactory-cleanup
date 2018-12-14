@@ -114,10 +114,10 @@ function getLoggingLevel() {
 
 function getConnectionDefaults() {
     return {
-        baseURL: getConnectionUrl(),
+        baseURL: module.exports.getConnectionUrl(),
         auth:    {
-            username: getUserName(),
-            password: getToken()
+            username: module.exports.getUserName(),
+            password: module.exports.getToken()
         },
         headers: { 'content-type': 'text/plain' }
     }
@@ -167,5 +167,8 @@ module.exports = {
     getThresholdKeep,
     checkDependencies,
     getPrefixFilter,
-    getRepositoryFilter
+    getRepositoryFilter,
+    getConnectionUrl,
+    getUserName,
+    getToken
 };
