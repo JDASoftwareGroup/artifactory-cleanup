@@ -1,8 +1,8 @@
-'use strict';
+
 
 import errorEx from 'error-ex'
 
-let QueryError = errorEx('QueryError', {
+const QueryError = errorEx('QueryError', {
     url:       errorEx.append(' url %s')
 });
 

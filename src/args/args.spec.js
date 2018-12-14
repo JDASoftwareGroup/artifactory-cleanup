@@ -1,4 +1,4 @@
-'use strict';
+
 
 const MOCK_URL = 'http://acme.org';
 const MOCK_USER = 'jane.doe@acme.org';
@@ -99,7 +99,7 @@ describe('Test argv setting', () => {
             test('getting the help error if no arguments are set', () => {
                 jest.unmock('yargs');
                 mockYargs(false);
-                let exitSpy = jest.spyOn(process, "exit").mockImplementation(number => number);
+                const exitSpy = jest.spyOn(process, "exit").mockImplementation(number => number);
                 args.isDryRun();
                 expect(exitSpy).toHaveBeenCalledWith(1);
             })
@@ -107,7 +107,7 @@ describe('Test argv setting', () => {
     });
 
     function mockYargs(mockExit = true) {
-        let yargsMockValues = generateYargsMockValues();
+        const yargsMockValues = generateYargsMockValues();
         jest.spyOn(yargs, 'usage').mockImplementation(() => yargsMockValues);
         jest.spyOn(yargs, 'option').mockImplementation(() => yargsMockValues);
         jest.spyOn(yargs, 'help').mockImplementation(() => yargsMockValues);

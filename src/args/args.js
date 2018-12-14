@@ -1,6 +1,3 @@
-'use strict';
-import argv from 'yargs'
-import ArgsError from './args-error.js'
 
 function getBaseYargs() {
     const argv = require('yargs');
@@ -81,9 +78,9 @@ function getBaseYargs() {
 function checkDependencies(parsedArgv = {}) {
     if ((parsedArgv.n && parsedArgv.o) || parsedArgv.d) {
         return true
-    } else {
+    } 
         throw new Error("Set threshold can be either duration and unit or date");
-    }
+    
 }
 
 function getTimeUnits() {

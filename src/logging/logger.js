@@ -1,17 +1,15 @@
-'use strict';
+
 
 import winston from 'winston'
 import moment from 'moment'
 
 const { createLogger, format, transports } = winston;
 const { combine, timestamp, printf, splat, colorize } = format;
-const formatter = info => {
-  return `${moment(info.timestamp).format('L h:mm:ss.SS A')} ${info.level}: ${info.message}`;
-};
+const formatter = info => `${moment(info.timestamp).format('L h:mm:ss.SS A')} ${info.level}: ${info.message}`;
 
 const logger = function() {
-    let args = require('../args/args');
-    let createdLogger =  createLogger({
+    const args = require('../args/args');
+    const createdLogger =  createLogger({
         format:  combine(splat(), colorize(), timestamp(), printf(formatter))   ,
         transports: [new transports.Console({
             colorize: true,

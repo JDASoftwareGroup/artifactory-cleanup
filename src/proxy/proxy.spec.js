@@ -1,20 +1,19 @@
-'use strict';
+
 
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
 import MockAdapter from 'axios-mock-adapter'
-import {equal} from 'assert'
 import mockLogger from '../test-fixtures/mock-logger'
 import QueryError from './query-error'
 
-let httpMock = new MockAdapter(axios);
+const httpMock = new MockAdapter(axios);
 
 
 describe('Proxy Artifactory requests', () => {
     let proxy;
 
-    afterEach(function () {
+    afterEach(() => {
         httpMock.reset();
     });
 
@@ -26,7 +25,7 @@ describe('Proxy Artifactory requests', () => {
             proxy = require('./proxy');
             mockEmptyQueryResponse();
 
-            let foundArtifactsResults = await proxy.getArtifacts({
+            const foundArtifactsResults = await proxy.getArtifacts({
                 "unit":     "year",
                 "duration": "4"
             });
@@ -39,7 +38,7 @@ describe('Proxy Artifactory requests', () => {
             mockSimpleArgs();
             proxy = require('./proxy');
             mockFilteredQueryResponse();
-            let foundArtifacts = await proxy.getArtifacts({
+            const foundArtifacts = await proxy.getArtifacts({
                 "unit":     "year",
                 "duration": "1"
             });
@@ -52,8 +51,7 @@ describe('Proxy Artifactory requests', () => {
             mockSimpleArgs();
             proxy = require('./proxy');
             mockFilteredQueryResponse();
-            let foundArtifacts = await proxy.getArtifacts('2018-09-25T19:45:10+00:00');
-            let json= JSON.stringify(foundArtifacts, jsonCollectionMapper);
+            const foundArtifacts = await proxy.getArtifacts('2018-09-25T19:45:10+00:00');
             expect(foundArtifacts).toMatchSnapshot({
                 thresholdTime: expect.any(String)
             });
@@ -64,8 +62,7 @@ describe('Proxy Artifactory requests', () => {
             mockKeepLast3ThresholdArgs();
             proxy = require('./proxy');
             mockFilteredQueryResponse();
-            let foundArtifacts = await proxy.getArtifacts('2018-09-25T19:45:10+00:00');
-            let json= JSON.stringify(foundArtifacts, jsonCollectionMapper);
+            const foundArtifacts = await proxy.getArtifacts('2018-09-25T19:45:10+00:00');
             expect(foundArtifacts).toMatchSnapshot({
                                                        thresholdTime: expect.any(String)
                                                    });
@@ -73,14 +70,13 @@ describe('Proxy Artifactory requests', () => {
 
 
         test('returns the artifacts when queried with prefix', async () => {
-            let args = mockKeepLast3ThresholdArgs();
-            let prefix = 'libs-release-local/com/dundermifflin';
+            const args = mockKeepLast3ThresholdArgs();
+            const prefix = 'libs-release-local/com/dundermifflin';
             args.getPrefixFilter = () => prefix;
 
             proxy = require('./proxy');
             mockFilteredQueryResponse();
-            let foundArtifacts = await proxy.getArtifacts('2018-09-25T19:45:10+00:00');
-            let json= JSON.stringify(foundArtifacts, jsonCollectionMapper);
+            const foundArtifacts = await proxy.getArtifacts('2018-09-25T19:45:10+00:00');
             expect(foundArtifacts).toMatchSnapshot({
                                                        thresholdTime: expect.any(String)
                                                    });
@@ -92,7 +88,7 @@ describe('Proxy Artifactory requests', () => {
             const args = require('../args');
             proxy = require('./proxy');
             httpMock.onPost().reply(404);
-            let expectedException = new QueryError('/Problem reading response from Artifactory');
+            const expectedException = new QueryError('/Problem reading response from Artifactory');
             expectedException.url = args.getConnectionDefaults().baseURL;
             await expect(proxy.getArtifacts({
                 "unit":     "year",
@@ -139,19 +135,19 @@ describe('Proxy Artifactory requests', () => {
             mockSimpleArgs();
             proxy = require('./proxy');
             mockDeleteSuccesfulResponse();
-            let mockedArtifacts = getMockedFoundArtifacts();
-            let deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, true);
+            const mockedArtifacts = getMockedFoundArtifacts();
+            const deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, true);
             expect(deletedPaths).toMatchSnapshot()
         });
 
         test('only filtered prefix artifacts are deleted', async () => {
-            let args = mockSimpleArgs();
-            let prefix = 'libs-release-local/com/dundermifflin';
+            const args = mockSimpleArgs();
+            const prefix = 'libs-release-local/com/dundermifflin';
             args.getPrefixFilter = () => prefix;
             proxy = require('./proxy');
             mockDeleteSuccesfulResponse();
-            let mockedArtifacts = getMockedFoundArtifacts();
-            let deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, true);
+            const mockedArtifacts = getMockedFoundArtifacts();
+            const deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, true);
             expect(deletedPaths).toMatchSnapshot()
         });
 
@@ -162,10 +158,10 @@ describe('Proxy Artifactory requests', () => {
         test('artifacts specified are not deleted when dryRun is on', async () => {
             mockSimpleArgs();
             proxy = require('./proxy');
-            let deleteSpy = proxy.spytMethodReferece(jest.spyOn, 'delete');
+            const deleteSpy = proxy.spytMethodReferece(jest.spyOn, 'delete');
             mockDeleteSuccesfulResponse();
-            let mockedArtifacts = getMockedFoundArtifacts();
-            let deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, false);
+            const mockedArtifacts = getMockedFoundArtifacts();
+            const deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, false);
             expect(deleteSpy).toHaveBeenCalled();
             expect(deletedPaths).toMatchSnapshot()
         });
@@ -173,10 +169,10 @@ describe('Proxy Artifactory requests', () => {
         test('artifacts specified are not deleted when dryRun is on implicitly', async () => {
             mockSimpleArgs();
             proxy = require('./proxy');
-            let deleteSpy = proxy.spytMethodReferece(jest.spyOn, 'delete');
+            const deleteSpy = proxy.spytMethodReferece(jest.spyOn, 'delete');
             mockDeleteSuccesfulResponse();
-            let mockedArtifacts = getMockedFoundArtifacts();
-            let deletedPaths = await proxy.deleteArtifacts(mockedArtifacts);
+            const mockedArtifacts = getMockedFoundArtifacts();
+            const deletedPaths = await proxy.deleteArtifacts(mockedArtifacts);
             expect(deleteSpy).toHaveBeenCalled();
             expect(new Set(deletedPaths)).toMatchSnapshot()
         });
@@ -185,18 +181,14 @@ describe('Proxy Artifactory requests', () => {
         test('artifacts specified are not deleted when there is a network error', async () => {
             mockSimpleArgs();
             proxy = require('./proxy');
-            let deleteSpy = proxy.spytMethodReferece(jest.spyOn, 'delete');
+            const deleteSpy = proxy.spytMethodReferece(jest.spyOn, 'delete');
             mockDeleteNetworkErrorResponse();
-            let mockedArtifacts = getMockedFoundArtifacts();
-            let deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, false);
+            const mockedArtifacts = getMockedFoundArtifacts();
+            const deletedPaths = await proxy.deleteArtifacts(mockedArtifacts, false);
             expect(deleteSpy).toHaveBeenCalled();
             expect(deletedPaths).toMatchSnapshot()
 
         });
-
-        function mockDeleteSuccesfulResponse() {
-            httpMock.onDelete().reply(200, { results: [] });
-        }
 
         function mockDeleteNetworkErrorResponse() {
             httpMock.onDelete().networkError();
@@ -209,12 +201,12 @@ describe('Proxy Artifactory requests', () => {
     });
 
     function mapReviver(key, value) {
-        if (typeof value != "object") return value;
+        if (typeof value !== "object") return value;
         switch (value["<kind>"]){
             case undefined: return value;
             case "Map": {
-                let newValue = new Map;
-                let mapData = value["<mapData>"];
+                const newValue = new Map;
+                const mapData = value["<mapData>"];
                 if (!mapData) return value;
                 mapData.forEach(e=>newValue.set(e[0], e[1]));
                 return newValue;
@@ -228,7 +220,7 @@ describe('Proxy Artifactory requests', () => {
     }
 
     function mockKeepLast3ThresholdArgs() {
-        let args = mockSimpleArgs();
+        const args = mockSimpleArgs();
         args.getThresholdKeep = () => 3;
         return args;
     }

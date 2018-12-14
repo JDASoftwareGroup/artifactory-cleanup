@@ -1,4 +1,4 @@
-'use strict';
+
 
 import mockConsole from 'jest-mock-console';
 import mockArgs from "../test-fixtures/mock-args"
