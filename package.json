@@ -16,7 +16,7 @@
     "npm": ">=5"
   },
   "scripts": {
-    "test": "jest",
+    "test": "TZ='Antarctica/Mawson' jest",
     "test:coverage": "npm run test -- --coverage",
     "test:coverage:deploy": "npm run test:coverage && codecov",
     "clean": "rimraf ./dist && rimraf ./coverage",
