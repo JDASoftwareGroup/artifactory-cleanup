@@ -1,6 +1,3 @@
-'use strict';
-import argv from 'yargs'
-import ArgsError from './args-error.js'
 
 function getBaseYargs() {
     const argv = require('yargs');
@@ -81,9 +78,8 @@ function getBaseYargs() {
 function checkDependencies(parsedArgv = {}) {
     if ((parsedArgv.n && parsedArgv.o) || parsedArgv.d) {
         return true
-    } else {
-        throw new Error("Set threshold can be either duration and unit or date");
     }
+    throw new Error("Set threshold can be either duration and unit or date");
 }
 
 function getTimeUnits() {
@@ -114,10 +110,10 @@ function getLoggingLevel() {
 
 function getConnectionDefaults() {
     return {
-        baseURL: getConnectionUrl(),
+        baseURL: module.exports.getConnectionUrl(),
         auth:    {
-            username: getUserName(),
-            password: getToken()
+            username: module.exports.getUserName(),
+            password: module.exports.getToken()
         },
         headers: { 'content-type': 'text/plain' }
     }
@@ -167,5 +163,8 @@ module.exports = {
     getThresholdKeep,
     checkDependencies,
     getPrefixFilter,
-    getRepositoryFilter
+    getRepositoryFilter,
+    getConnectionUrl,
+    getUserName,
+    getToken
 };

@@ -1,28 +1,27 @@
-'use strict';
+
 import inquirer from 'inquirer'
 import figlet from 'figlet'
 import chalk from 'chalk'
-import proxy from './proxy'
 import moment from 'moment'
 
 import filesize from "filesize";
-import args from "./args";
+import proxy from './proxy'
 
 (async () => {
     welcome();
-    let args = require('./args');
+    const args = require('./args');
     registerHandlers();
 
     try {
-        let logger = require('./logging');
-        let threshold = args.getThresholdDate() || {
+        const logger = require('./logging');
+        const threshold = args.getThresholdDate() || {
             duration: args.getThresholdDuration(),
             unit:     args.getThresholdUnit()
         };
-        let response = await proxy.getArtifacts(threshold);
+        const response = await proxy.getArtifacts(threshold);
         let shouldDelete = true;
         let deleteConfirmationAnswer;
-        let isDryRun = args.isDryRun()? true: false;
+        const isDryRun = !!args.isDryRun();
         if (!args.isQuiet() && !isDryRun) {
             try {
                 deleteConfirmationAnswer = await inquirer.prompt({
@@ -40,8 +39,8 @@ import args from "./args";
         if (shouldDelete && response.items.size) {
             await proxy.deleteArtifacts(response.items, isDryRun);
         }
-        let dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
-        let dryRunCaption = isDryRun ? chalk.white.underline.bold('DRY RUN:') : '';
+        const dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
+        const dryRunCaption = isDryRun ? chalk.white.underline.bold('DRY RUN:') : '';
 
         logger.info("%s %s Total of %s were deleted for a threshold of: %s and filter of %s for repositories", dryrunPrefix,
                     dryRunCaption, filesize(response.totalSize), moment(response.thresholdTime).format('LLL'),

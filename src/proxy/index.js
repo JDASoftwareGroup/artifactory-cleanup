@@ -1,4 +1,4 @@
-'use strict';
+
 
 import proxy from './proxy'
 
