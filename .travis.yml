@@ -10,5 +10,5 @@ addons:
   sonarcloud:
     organization: "jdasoftwaregroup"
 script:
-  - npm test:coverage:deploy
+  - npm run test:coverage:deploy
   - sonar-scanner
