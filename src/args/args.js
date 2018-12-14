@@ -78,9 +78,8 @@ function getBaseYargs() {
 function checkDependencies(parsedArgv = {}) {
     if ((parsedArgv.n && parsedArgv.o) || parsedArgv.d) {
         return true
-    } 
-        throw new Error("Set threshold can be either duration and unit or date");
-    
+    }
+    throw new Error("Set threshold can be either duration and unit or date");
 }
 
 function getTimeUnits() {

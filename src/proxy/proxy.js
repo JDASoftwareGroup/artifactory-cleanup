@@ -66,7 +66,6 @@ function getResultMap(results) {
                                                                                                                 secondArtifact.createdDate ?
                                                                                                                 1 :
                                                                                                                 -1));
-    const currentSize = grandparentArtifact.size;
     if (thresholdKeep) {
       const truncatedArtifacts = [...sortedArtifacts.entries()];
       truncatedArtifacts.length = Math.min(thresholdKeep, truncatedArtifacts.length);
@@ -116,9 +115,10 @@ async function getArtifacts(olderThan) {
   logger.verbose('Threshold= %o', olderThan);
 
   logger.verbose('Connection defaults= %o', args.getConnectionDefaults());
+  const isOlderThan = _.isObject(olderThan) ? moment().subtract(olderThan.duration, olderThan.unit) :
+                      moment(olderThan);
   const thresholdTime = _.isUndefined(olderThan) ? undefined :
-                        _.isObject(olderThan) ? moment().subtract(olderThan.duration, olderThan.unit) :
-                        moment(olderThan);
+                        isOlderThan;
 
   if (thresholdTime === undefined) {
     throw new Error("You have to specify a time threshold")
@@ -163,7 +163,7 @@ async function deleteArtifacts(itemsToDelete, isDryRun = true) {
 
     }
     catch (error) {
-      //  logger.debug('Delete operation failed for %s. Error: ', artifactItemParentPathEntry[0], error);
+        logger.debug(error);
     }
   }
   return succesfulOperations;
