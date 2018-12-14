@@ -7,7 +7,7 @@ import mockArgs from "../test-fixtures/mock-args"
 describe('Proxy Artifactory requests', () => {
 
 
-  describe('Log mssages', () => {
+  describe('Log messages', () => {
     mockArgs();
 
     test('returns the current format',  () => {
