@@ -11,5 +11,5 @@ addons:
     organization: "jdasoftwaregroup"
 script:
   - npm run lint
-  - npm run coverage
+  - npm test:coverage:deploy
   - sonar-scanner
