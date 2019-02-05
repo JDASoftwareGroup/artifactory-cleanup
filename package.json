@@ -1,12 +1,12 @@
 {
   "name": "artifactory-cleanup",
   "description": "Artifactory Cleanup",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Gabriel Kohen (https://github.com/gkohen)",
   "repository": "https://github.com/JDASoftwareGroup/artifactory-cleanup",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Gabriel%20Kohen/artifactory-cleanup/issues"
+    "url": "https://github.com/JDASoftwareGroup/artifactory-cleanup/issues"
   },
   "files": [
     "LICENSE"
@@ -16,14 +16,18 @@
     "npm": ">=5"
   },
   "scripts": {
-    "test": "jest --coverage --silent src",
-    "coverage": "jest --coverage --silent src && codecov",
+    "test": "TZ='Antarctica/Mawson' jest",
+    "test:coverage": "npm run test -- --coverage",
+    "test:coverage:deploy": "npm run test:coverage && codecov",
+    "clean": "rimraf ./dist && rimraf ./coverage",
     "postinstall": "npm run build",
     "build": "babel src --out-dir dist --ignore Procfile,node_modules,test,*.spec.js,*.sh --no-comments --copy-files",
     "lint": "eslint src/**",
+    "precommit": "lint-staged && npm run test",
     "start": "node ./dist",
     "dev": "NODE_ENV=development nodemon index.js --exec babel-node -- --help",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "release": "standard-version"
   },
   "bin": {
     "artifactory-cleanup": "./bin/artifactory-cleanup.js"
@@ -32,6 +36,26 @@
     "artifactory",
     "cleanup"
   ],
+  "jestSonar": {
+    "reportPath": "coverage"
+  },
+  "eslintIgnoreConfig": [
+    "node_modules/",
+    "coverage/",
+    "dist/"
+  ],
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "parser": "flow"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write \"src/**/*.js\"",
+      "git add"
+    ]
+  },
   "dependencies": {
     "axios": "0.18.0",
     "axios-mock-adapter": "1.16.0",
@@ -51,14 +75,25 @@
     "@babel/runtime": "^7.3.1",
     "acorn": "^6.0.7",
     "babel-eslint": "10.0.1",
-    "babel-jest": "24.0.0",
+    "babel-jest": "24.1.0",
     "babel-minify": "0.5.0",
     "babel-preset-env": "1.7.0",
     "babel-watch": "7.0.0",
     "chalk": "2.4.2",
     "codecov": "^3.1.0",
     "eslint": "5.13.0",
-    "jest-cli": "24.0.0",
-    "nodemon": "1.18.9"
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
+    "jest-cli": "24.1.0",
+    "jest-mock-console": "^0.4.2",
+    "jest-sonar-reporter": "^2.0.0",
+    "lint-staged": "^8.1.3",
+    "nodemon": "1.18.9",
+    "prettier": "^1.16.4",
+    "prettier-eslint": "^8.8.2",
+    "standard-version": "^4.4.0"
   }
 }
