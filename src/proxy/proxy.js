@@ -14,6 +14,7 @@ const queryEndpoint = 'search/aql';
 const api = 'api/';
 const excludedArtifacts = ['maven-metadata.xml'];
 
+
 async function getAqlQueryResult(query) {
   let results = [];
   try {
@@ -68,7 +69,7 @@ function getResultMap(results) {
                                                                                                                 -1));
     if (thresholdKeep) {
       const truncatedArtifacts = [...sortedArtifacts.entries()];
-      truncatedArtifacts.length = Math.min(thresholdKeep, truncatedArtifacts.length);
+      truncatedArtifacts.splice(0, Math.min(thresholdKeep, truncatedArtifacts.length));
       sortedArtifacts = new Map(truncatedArtifacts);
     }
     const adjustedSize = [...sortedArtifacts.values()].reduce((sum, currentArtifact) => sum + currentArtifact.size,
@@ -183,8 +184,8 @@ async function deleteItemAqlQuery([artifactGrandparentPath, artifactGrandparent]
       } else {
         response = await { status: 200 };
       }
-      logger.debug(('%sDeleted %s(%s)%s'), dryrunPrefix, artifactParent.size,
-                   artifactParentPath, dryrunPrefix);
+      logger.debug(('%sDeleted %s(%s) created date(%s)%s'), dryrunPrefix, filesize(artifactParent.size),
+                   artifactParentPath,moment(artifactParent.createdDate).format('LLL'), dryrunPrefix);
       deletedPaths.push(artifactParentPath);
     }
 
