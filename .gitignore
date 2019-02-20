@@ -114,3 +114,5 @@ fabric.properties
 
 dist/
 
+local-test*.sh
+
