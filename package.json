@@ -63,7 +63,7 @@
     "error-ex": "1.3.2",
     "figlet": "1.2.1",
     "filesize": "4.1.2",
-    "inquirer": "6.2.2",
+    "inquirer": "6.3.1",
     "lodash": "4.17.11",
     "moment": "2.24.0",
     "winston": "3.2.1",
