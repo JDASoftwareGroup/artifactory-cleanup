@@ -90,7 +90,7 @@
     "jest-cli": "24.8.0",
     "jest-mock-console": "^0.4.2",
     "jest-sonar-reporter": "^2.0.0",
-    "lint-staged": "^8.1.5",
+    "lint-staged": "^8.1.6",
     "nodemon": "1.19.0",
     "prettier": "^1.17.0",
     "prettier-eslint": "^8.8.2",
