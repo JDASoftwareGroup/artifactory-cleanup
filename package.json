@@ -73,7 +73,7 @@
     "@babel/cli": "^7.4.4",
     "@babel/register": "^7.4.4",
     "@babel/runtime": "^7.4.5",
-    "acorn": "^6.1.1",
+    "acorn": "^6.2.0",
     "babel-eslint": "10.0.2",
     "babel-jest": "24.8.0",
     "babel-minify": "0.5.0",
