@@ -70,8 +70,8 @@
     "yargs": "14.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.0",
-    "@babel/register": "^7.5.5",
+    "@babel/cli": "^7.5.5",
+    "@babel/register": "^7.6.0",
     "@babel/runtime": "^7.5.5",
     "acorn": "^7.0.0",
     "babel-eslint": "10.0.3",
