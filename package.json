@@ -70,7 +70,7 @@
     "yargs": "14.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.0",
+    "@babel/cli": "^7.6.2",
     "@babel/register": "^7.6.2",
     "@babel/runtime": "^7.6.0",
     "acorn": "^7.0.0",
