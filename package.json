@@ -62,7 +62,7 @@
     "dotenv": "8.1.0",
     "error-ex": "1.3.2",
     "figlet": "1.2.4",
-    "filesize": "4.2.0",
+    "filesize": "4.2.1",
     "inquirer": "7.0.0",
     "lodash": "4.17.15",
     "moment": "2.24.0",
@@ -70,10 +70,10 @@
     "yargs": "14.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.0",
+    "@babel/cli": "^7.6.2",
     "@babel/register": "^7.5.5",
-    "@babel/runtime": "^7.6.0",
-    "acorn": "^7.0.0",
+    "acorn": "^7.1.0",
+    "@babel/register": "^7.6.2",
     "babel-eslint": "10.0.3",
     "babel-jest": "24.9.0",
     "babel-minify": "0.5.1",
@@ -90,8 +90,8 @@
     "jest-cli": "24.9.0",
     "jest-mock-console": "^1.0.0",
     "jest-sonar-reporter": "^2.0.0",
-    "lint-staged": "^9.3.0",
     "nodemon": "1.19.3",
+    "lint-staged": "^9.4.0",
     "prettier": "^1.18.2",
     "prettier-eslint": "^9.0.0",
     "standard-version": "^7.0.0"
