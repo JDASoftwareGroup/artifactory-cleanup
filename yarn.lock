@@ -3120,10 +3120,10 @@ filename-regex@^2.0.0:
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
   integrity sha1-wcS5vuPglyXdsQa3XB4wH+LxiyY=
 
-filesize@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/filesize/-/filesize-5.0.1.tgz#aa8cba3fe38c8131e4523e4356b5788cb7c9a946"
-  integrity sha512-YUuUp6LkHz+13F0wiqrYsChnhN8hre8fz/C4vEHMP08VuqV7SyHBnzVDxkHSDaOlRIuC7iCDiMFfo1ZTRb0rTA==
+filesize@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/filesize/-/filesize-5.0.3.tgz#2fa284185e9d2e8edbec2915b4dadce4043aac31"
+  integrity sha512-RM123v6KPqgZJmVCh4rLvCo8tLKr4sgD92DeZ+AuoUE8teGZJHKs1cTORwETcpIJSlGsz2WYdwKDQUXby5hNqQ==
 
 fill-range@^2.1.0:
   version "2.2.4"
