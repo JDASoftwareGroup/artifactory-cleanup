@@ -11,9 +11,9 @@ import queryText from './fixtures/query.json'
 
 const axios = axiosFactory.create(args.getConnectionDefaults());
 const queryEndpoint = 'search/aql';
+const itemPropertiesQueryEndpoint = 'storage/';
 const api = 'api/';
 const excludedArtifacts = ['maven-metadata.xml'];
-
 
 async function getAqlQueryResult(query) {
   let results = [];
@@ -23,8 +23,7 @@ async function getAqlQueryResult(query) {
     if (results === undefined) {
       throw MalformedQueryError('Received malformed response error when querying Artifactory server: %s');
     }
-  }
-  catch (error) {
+  } catch (error) {
     logger.debug(error);
     throw error;
   }
@@ -32,78 +31,78 @@ async function getAqlQueryResult(query) {
 }
 
 
-function getResultMap(results) {
-  const thresholdKeep = args.getThresholdKeep();
+function getFilteredToBeDeleted(results, isDryRun) {
+  const dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
+
+  let thresholdKeep = args.getThresholdKeep() || 0;
   const prefixFilter = args.getPrefixFilter();
-  let totalSize = 0;
-  const resultMap = results.map(item => getNormalizedPathItem(item))
-                           .filter(item => (!prefixFilter || item.normalizedPath.startsWith(prefixFilter)))
-                           .filter(item => excludedArtifacts.every(
-                             excludedFile => !item.normalizedPath.endsWith(excludedFile)))
-                           .reduce((accumulatedResult, item) => {
-                             const artifactParent = item.normalizedPath.split('/');
-                             artifactParent.pop();
-                             const artifactParentPath = artifactParent.join('/');
-                             artifactParent.pop();
-                             const artifactGrandparentPath = artifactParent.join('/');
-                             const foundArtifactGrandparent = getChildItem(accumulatedResult, artifactGrandparentPath);
-                             const foundArtifactParent = getChildItem(foundArtifactGrandparent.items, artifactParentPath);
-                             foundArtifactParent.items.set(item.normalizedPath, item);
-                             foundArtifactParent.size += item.size;
-                             const itemDate = new Date(item.created);
-                             foundArtifactParent.createdDate =
-                               foundArtifactParent.createdDate < itemDate ? foundArtifactParent.createdDate :
-                               itemDate;
-                             foundArtifactGrandparent.createdDate =
-                               foundArtifactGrandparent.createdDate < foundArtifactParent.createdDate ?
-                               foundArtifactGrandparent.createdDate : foundArtifactParent.createdDate;
-                             foundArtifactGrandparent.size += item.size;
-                             return accumulatedResult;
-                           }, new Map());
-  resultMap.forEach(grandparentArtifact => {
-    const parentArtifacts = grandparentArtifact.items;
-    let sortedArtifacts = new Map([...parentArtifacts.entries()].sort(([firstArtifactPath, firstArtifact],
-                                                                       [secondArtifactPath, secondArtifact]) => firstArtifact.createdDate <
-                                                                                                                secondArtifact.createdDate ?
-                                                                                                                1 :
-                                                                                                                -1));
-    if (thresholdKeep) {
-      const truncatedArtifacts = [...sortedArtifacts.entries()];
-      truncatedArtifacts.splice(0, Math.min(thresholdKeep, truncatedArtifacts.length));
-      sortedArtifacts = new Map(truncatedArtifacts);
-    }
-    const adjustedSize = [...sortedArtifacts.values()].reduce((sum, currentArtifact) => sum + currentArtifact.size,
-                                                              0);
-    grandparentArtifact.size = adjustedSize;
-    totalSize += grandparentArtifact.size;
-
-    grandparentArtifact.items = sortedArtifacts;
-  });
-
-  return {
-    items: resultMap,
-    totalSize
-  };
-}
-
-function getChildItem(childItems, childPath) {
-  let foundChild = childItems.get(childPath);
-  if (foundChild === undefined) {
-    foundChild = {
-      size:        0,
-      items:       new Map(),
-      createdDate: new Date()
-    };
-    childItems.set(childPath, foundChild);
+  if (prefixFilter) {
+    logger.debug('Prefix filter is:' + prefixFilter);
+  } else {
+    logger.debug('No prefix filter');
   }
-  return foundChild;
+  let totalSize = 0;
+  var semVerRe = /^(?<artifactName>[^\.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z\.-]+)?\b$/;
+  var semVerNuget = /^(?<artifactName>.*?)\.(?<artifactVersion>(\d+\.)+?([\d\w-]+))\.(?<artifactExtension>nupkg)$/;
+  const resultMap = results.map(item => {
+    let normalizedPathItem = getNormalizedPathItem(item);
+    let res = semVerRe.exec(normalizedPathItem.name) || semVerNuget.exec(normalizedPathItem.name);
+    normalizedPathItem = {...normalizedPathItem, ...res.groups};
+    normalizedPathItem.artifactNamespace = normalizedPathItem.repo + ":" + normalizedPathItem.artifactName;
+    return normalizedPathItem;
+  })
+    .filter(item => (!prefixFilter || item.normalizedPath.startsWith(prefixFilter)))
+    .filter(item => excludedArtifacts.every(
+      excludedFile => !item.normalizedPath.endsWith(excludedFile)))
+    .reduce((map, item) => {
+      const {artifactNamespace, normalizedPath} = item;
+      map.indexedByPath[normalizedPath] = item;
+      totalSize += item.size;
+      let namespaceVersions = map.indexedByNamespace[artifactNamespace] || new Map();
+      map.indexedByNamespace[artifactNamespace] = namespaceVersions;
+
+      let namespaceVersion = namespaceVersions.get(item.artifactVersion);
+      if (!namespaceVersion) {
+        namespaceVersion = {items: [item], createdDate: new Date(item.created)};
+      } else {
+        namespaceVersion.items.push(item);
+      }
+      namespaceVersions.set(item.artifactVersion, namespaceVersion);
+      return map;
+    }, {indexedByPath: {}, indexedByNamespace: {}});
+  let filteredArtifactsFound = [];
+  logger.debug("%s Before keeping the newest found %d artifacts with size of:%s %s", dryrunPrefix, Object.keys(resultMap.indexedByPath).length, filesize(totalSize), dryrunPrefix);
+  totalSize = 0;
+  Object.values(resultMap.indexedByNamespace).forEach((namespaceVersions) => {
+    let tempNamespaceVersions = new Map([...namespaceVersions.entries()]
+      .sort((firstArtifactEntry, secondArtifactEntry) =>
+        firstArtifactEntry[1].createdDate < secondArtifactEntry[1].createdDate ? 1 : -1));
+    namespaceVersions.clear();
+    let addedItems = thresholdKeep;
+    tempNamespaceVersions.forEach((tempNamespaceVersionsEntry, tempNamespaceVersionsKey) => {
+      if (addedItems > 0) {
+        addedItems--;
+      } else {
+        tempNamespaceVersionsEntry.items.forEach(artifact => {
+          logger.silly("%s About to delete %s: size:%s %s", dryrunPrefix, artifact.normalizedPath, filesize(artifact.size), dryrunPrefix)
+          totalSize += artifact.size;
+        });
+
+        namespaceVersions.set(tempNamespaceVersionsKey, tempNamespaceVersionsEntry);
+        filteredArtifactsFound.push(...tempNamespaceVersionsEntry.items);
+      }
+    })
+  });
+  logger.debug("%s About to a delete total of %d artifacts with size of:%s %s", dryrunPrefix, filteredArtifactsFound.length, filesize(totalSize), dryrunPrefix)
+
+  return filteredArtifactsFound;
 }
 
 function getNormalizedPathItem(artifactItem) {
   let normalizedPath = '';
 
   if (artifactItem.path === '.') {
-    normalizedPath = artifactItem.repo;
+    normalizedPath = `${artifactItem.repo}/${artifactItem.name}`;
   } else {
     normalizedPath = `${artifactItem.repo}/${artifactItem.path}/${artifactItem.name}`;
   }
@@ -111,100 +110,92 @@ function getNormalizedPathItem(artifactItem) {
   return artifactItem;
 }
 
-async function getArtifacts(olderThan) {
+async function getArtifacts(olderThan, isDryRun) {
 
-  logger.verbose('Threshold= %o', olderThan);
+  logger.debug('Threshold= %o', olderThan);
 
-  logger.verbose('Connection defaults= %o', args.getConnectionDefaults());
+  logger.debug('Connection defaults= %o', args.getConnectionDefaults());
   const isOlderThan = _.isObject(olderThan) ? moment().subtract(olderThan.duration, olderThan.unit) :
-                      moment(olderThan);
+    moment(olderThan);
   const thresholdTime = _.isUndefined(olderThan) ? undefined :
-                        isOlderThan;
+    isOlderThan;
 
   if (thresholdTime === undefined) {
     throw new Error("You have to specify a time threshold")
   }
-  logger.verbose('threshold=%s', thresholdTime.format());
+  logger.debug('threshold=%s', thresholdTime.format());
   const compiledQuery = _.template(JSON.stringify(queryText))({
-                                                                filter:        args.getRepositoryFilter(),
-                                                                thresholdTime: thresholdTime.format()
-                                                              });
-  logger.info('compiled query\n%s', compiledQuery);
-  const query = `items.find(${compiledQuery})`;
-  let foundItemsResult;
+    filter: args.getRepositoryFilter(),
+    thresholdTime: thresholdTime.format()
+  });
+  logger.debug('compiled query\n%s', compiledQuery);
+  const query = `items.find(${compiledQuery}).include("*")`;
+  let foundItemsResult = {};
   try {
     const queryResults = await getAqlQueryResult(query);
-    foundItemsResult = getResultMap(queryResults);
-  }
-  catch (error) {
-    logger.debug(error);
+    foundItemsResult.items = queryResults;
+  } catch (error) {
+    logger.error(error);
     const queryException = new QueryError('Problem reading response from Artifactory');
     queryException.url = args.getConnectionDefaults().baseURL;
 
     throw queryException;
   }
 
-  if (!foundItemsResult.items.size) {
+  if (foundItemsResult.items.length === 0) {
     logger.warn('Found no items');
   }
-  foundItemsResult.thresholdTime = thresholdTime.format();
+  let itemsResult = await getFilteredToBeDeleted(foundItemsResult.items, isDryRun);
 
-  return foundItemsResult;
+  return itemsResult;
 }
 
-async function deleteArtifacts(itemsToDelete, isDryRun = true) {
-  const succesfulOperations = [];
-
+async function deleteArtifacts(toBeDeletedFilteredArtifacts, isDryRun = true) {
+  let deletedSize = 0;
   logger.info('Artifacts are about to be deleted %s', isDryRun ? chalk.yellowBright.bgBlue('***Dry Run***') : '');
-
-  for (const artifactGrandparentEntry of itemsToDelete) {
-    try {
-      const deletedPaths = await deleteItemAqlQuery(artifactGrandparentEntry, isDryRun);
-      succesfulOperations.push(...deletedPaths);
-
-    }
-    catch (error) {
-        logger.debug(error);
-    }
+  let deletedArtifactsResponse = {totalSize: 0};
+  try {
+    deletedArtifactsResponse = await deleteItemAqlQuery(toBeDeletedFilteredArtifacts, isDryRun);
+  } catch (error) {
+    logger.error(error);
   }
-  return succesfulOperations;
+
+  return {...deletedArtifactsResponse};
 }
 
-
-async function deleteItemAqlQuery([artifactGrandparentPath, artifactGrandparent], isDryRun) {
+async function deleteItemAqlQuery(itemToDeleteResponse, isDryRun) {
   let response;
-  const deletedPaths = [];
+  const deletedArtifactsResponse = {deletedArtifacts: [], totalSize: 0};
   const dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
-  logger.info('%sAbout to delete %s(%s)%s', dryrunPrefix, artifactGrandparentPath,
-              filesize(artifactGrandparent.size), dryrunPrefix);
+  const {deletedArtifacts} = deletedArtifactsResponse;
   try {
-    for (const [artifactParentPath, artifactParent] of artifactGrandparent.items) {
+    for (const itemToDelete of itemToDeleteResponse) {
+      logger.silly('%s About to delete %o %s', dryrunPrefix, itemToDelete, dryrunPrefix);
       if (!isDryRun) {
-        response = await axios.delete(artifactParentPath);
+        response = await axios.delete(itemToDelete.normalizedPath);
+        deletedArtifactsResponse.totalSize += itemToDelete.size;
+        deletedArtifacts.push(itemToDelete);
       } else {
-        response = await { status: 200 };
+        response = await {status: 200};
       }
-      logger.debug(('%sDeleted %s(%s) created date(%s)%s'), dryrunPrefix, filesize(artifactParent.size),
-                   artifactParentPath,moment(artifactParent.createdDate).format('LLL'), dryrunPrefix);
-      deletedPaths.push(artifactParentPath);
+      logger.verbose(('%s Deleted %s(%s) %s'), dryrunPrefix, itemToDelete.normalizedPath,
+        filesize(itemToDelete.size),
+        dryrunPrefix);
     }
-
-    return deletedPaths;
-  }
-  catch (error) {
-    logger.error('Received error %s when deleting %s in Artifactory server:\\n %s', error, artifactGrandparentPath);
+    return deletedArtifactsResponse;
+  } catch (error) {
+    logger.error('Received error %s when deleting %o in Artifactory server:\\n %s', error, itemToDeleteResponse);
     throw new Error("Error deleting from the server.")
   }
 }
 
 
-function spytMethodReferece(spyActor, method) {
+function spytRestMethodReferece(spyActor, method) {
   return spyActor(axios, method);
 }
-
 
 module.exports = {
   getArtifacts,
   deleteArtifacts,
-  spytMethodReferece
+  spytRestMethodReferece: spytRestMethodReferece
 };
