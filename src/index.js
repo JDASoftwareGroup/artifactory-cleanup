@@ -10,25 +10,6 @@ import proxy from './proxy'
   welcome();
   const args = require('./args');
   registerHandlers();
-
-  async function promptDeletion(isDryRun, deleteConfirmationAnswer) {
-    let shouldDelete = true;
-    if (!args.isQuiet() && !isDryRun) {
-      try {
-        deleteConfirmationAnswer = await inquirer.prompt({
-          'type': 'confirm',
-          'name': 'deleteConfirmation',
-          'message': chalk.whiteBright.bgRed(
-            'Are you sure you want to delete the above artifacts?')
-        });
-      } catch (error) {
-        deleteConfirmationAnswer = {deleteConfirmation: false}
-      }
-      shouldDelete = deleteConfirmationAnswer.deleteConfirmation;
-    }
-    return shouldDelete;
-  }
-
   try {
     const logger = require('./logging');
     const threshold = args.getThresholdDate() || {
@@ -38,8 +19,7 @@ import proxy from './proxy'
     const isDryRun = !!args.isDryRun();
     const response = await proxy.getArtifacts(threshold, isDryRun);
     let shouldDelete = true;
-    let deleteConfirmationAnswer;
-    shouldDelete = await promptDeletion(isDryRun, deleteConfirmationAnswer, shouldDelete);
+    shouldDelete = await promptDeletion(isDryRun);
     if (shouldDelete && response.length !== 0) {
       const deletedResponse = await proxy.deleteArtifacts(response, isDryRun);
       const dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
@@ -48,7 +28,7 @@ import proxy from './proxy'
         dryRunCaption, response.length, filesize(deletedResponse.totalSize), moment(threshold).format('LLL'),
         args.getPrefixFilter() ? args.getPrefixFilter() : 'NONE');
       if (args.getThresholdKeep()) {
-        logger.info("Kept the %s newest artifacts per package",args.getThresholdKeep());
+        logger.info("Kept the %s newest artifacts per package", args.getThresholdKeep());
       }
     }
   } catch (error) {
@@ -65,5 +45,27 @@ import proxy from './proxy'
       console.error(`Error: ${err.message}`)
     })
   }
+
+  async function promptDeletion(isDryRun) {
+    let shouldDelete = true;
+    let deleteConfirmationAnswer;
+    if (args.isQuiet() || isDryRun) {
+      return;
+    }
+    try {
+      deleteConfirmationAnswer = await inquirer.prompt({
+        'type': 'confirm',
+        'name': 'deleteConfirmation',
+        'message': chalk.whiteBright.bgRed(
+          'Are you sure you want to delete the above artifacts?')
+      });
+    } catch (error) {
+      deleteConfirmationAnswer = {deleteConfirmation: false}
+    }
+    shouldDelete = deleteConfirmationAnswer.deleteConfirmation;
+
+    return shouldDelete;
+  }
+
 })();
 
