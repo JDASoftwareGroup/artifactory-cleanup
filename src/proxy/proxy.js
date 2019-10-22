@@ -34,23 +34,15 @@ async function getAqlQueryResult(query) {
 function getFilteredToBeDeleted(results, isDryRun) {
   const dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
 
-  let thresholdKeep = args.getThresholdKeep() || 0;
+  const thresholdKeep = args.getThresholdKeep() || 0;
   const prefixFilter = args.getPrefixFilter();
   if (prefixFilter) {
-    logger.debug('Prefix filter is:' + prefixFilter);
+    logger.debug(`Prefix filter is:' ${prefixFilter}`);
   } else {
     logger.debug('No prefix filter');
   }
   let totalSize = 0;
-  const semVerRe = /^(?<artifactName>[^\.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z\.-]+)?\b$/;
-  const semVerNuget = /^(?<artifactName>.*?)\.(?<artifactVersion>(\d+\.)+?([\d\w-]+))\.(?<artifactExtension>nupkg)$/;
-  const resultMap = results.map(item => {
-    let normalizedPathItem = getNormalizedPathItem(item);
-    const res = semVerRe.exec(normalizedPathItem.name) || semVerNuget.exec(normalizedPathItem.name);
-    normalizedPathItem = {...normalizedPathItem, ...res.groups, isSource: !!res.isSource};
-    normalizedPathItem.artifactNamespace = normalizedPathItem.repo + ":" + normalizedPathItem.artifactName;
-    return normalizedPathItem;
-  })
+  const resultMap = results.map(populateNormalizedArtifact)
     .filter(item => (!prefixFilter || item.normalizedPath.startsWith(prefixFilter)))
     .filter(item => excludedArtifacts.every(
       excludedFile => !item.normalizedPath.endsWith(excludedFile)))
@@ -96,6 +88,16 @@ function getFilteredToBeDeleted(results, isDryRun) {
   logger.debug("%s About to a delete total of %d artifacts with size of:%s %s", dryrunPrefix, filteredArtifactsFound.length, filesize(totalSize), dryrunPrefix)
 
   return filteredArtifactsFound;
+}
+
+function populateNormalizedArtifact(item) {
+  const semVerRe = /^(?<artifactName>[^\.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z\.-]+)?\b$/;
+  const semVerNuget = /^(?<artifactName>.*?)\.(?<artifactVersion>(\d+\.)+?([\d\w-]+))\.(?<artifactExtension>nupkg)$/;
+  let normalizedPathItem = getNormalizedPathItem(item);
+  const res = semVerRe.exec(normalizedPathItem.name) || semVerNuget.exec(normalizedPathItem.name);
+  normalizedPathItem = {...normalizedPathItem, ...res.groups, isSource: !!res.isSource};
+  normalizedPathItem.artifactNamespace = normalizedPathItem.repo + ":" + normalizedPathItem.artifactName;
+  return normalizedPathItem;
 }
 
 function getNormalizedPathItem(artifactItem) {

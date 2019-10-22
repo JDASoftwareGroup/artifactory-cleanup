@@ -11,16 +11,8 @@ import proxy from './proxy'
   const args = require('./args');
   registerHandlers();
 
-  try {
-    const logger = require('./logging');
-    const threshold = args.getThresholdDate() || {
-      duration: args.getThresholdDuration(),
-      unit: args.getThresholdUnit()
-    };
-    const isDryRun = !!args.isDryRun();
-    const response = await proxy.getArtifacts(threshold, isDryRun);
+  async function promptDeletion(isDryRun, deleteConfirmationAnswer) {
     let shouldDelete = true;
-    let deleteConfirmationAnswer;
     if (!args.isQuiet() && !isDryRun) {
       try {
         deleteConfirmationAnswer = await inquirer.prompt({
@@ -34,8 +26,22 @@ import proxy from './proxy'
       }
       shouldDelete = deleteConfirmationAnswer.deleteConfirmation;
     }
-    if (shouldDelete && response.length != 0) {
-      let deletedResponse = await proxy.deleteArtifacts(response, isDryRun);
+    return shouldDelete;
+  }
+
+  try {
+    const logger = require('./logging');
+    const threshold = args.getThresholdDate() || {
+      duration: args.getThresholdDuration(),
+      unit: args.getThresholdUnit()
+    };
+    const isDryRun = !!args.isDryRun();
+    const response = await proxy.getArtifacts(threshold, isDryRun);
+    let shouldDelete = true;
+    let deleteConfirmationAnswer;
+    shouldDelete = await promptDeletion(isDryRun, deleteConfirmationAnswer, shouldDelete);
+    if (shouldDelete && response.length !== 0) {
+      const deletedResponse = await proxy.deleteArtifacts(response, isDryRun);
       const dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
       const dryRunCaption = isDryRun ? chalk.white.underline.bold('DRY RUN:') : '';
       logger.info("%s %s Total of %s artifacts were deleted using %s for a threshold of: %s and filter of %s for repositories.", dryrunPrefix,
@@ -45,8 +51,6 @@ import proxy from './proxy'
         logger.info("Kept the %s newest artifacts per package",args.getThresholdKeep());
       }
     }
-
-
   } catch (error) {
     console.error(error);
     process.exitCode = 1;
