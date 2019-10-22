@@ -42,11 +42,11 @@ function getFilteredToBeDeleted(results, isDryRun) {
     logger.debug('No prefix filter');
   }
   let totalSize = 0;
-  var semVerRe = /^(?<artifactName>[^\.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z\.-]+)?\b$/;
-  var semVerNuget = /^(?<artifactName>.*?)\.(?<artifactVersion>(\d+\.)+?([\d\w-]+))\.(?<artifactExtension>nupkg)$/;
+  const semVerRe = /^(?<artifactName>[^\.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z\.-]+)?\b$/;
+  const semVerNuget = /^(?<artifactName>.*?)\.(?<artifactVersion>(\d+\.)+?([\d\w-]+))\.(?<artifactExtension>nupkg)$/;
   const resultMap = results.map(item => {
     let normalizedPathItem = getNormalizedPathItem(item);
-    let res = semVerRe.exec(normalizedPathItem.name) || semVerNuget.exec(normalizedPathItem.name);
+    const res = semVerRe.exec(normalizedPathItem.name) || semVerNuget.exec(normalizedPathItem.name);
     normalizedPathItem = {...normalizedPathItem, ...res.groups, isSource: !!res.isSource};
     normalizedPathItem.artifactNamespace = normalizedPathItem.repo + ":" + normalizedPathItem.artifactName;
     return normalizedPathItem;
@@ -58,7 +58,7 @@ function getFilteredToBeDeleted(results, isDryRun) {
       const {artifactNamespace, normalizedPath} = item;
       map.indexedByPath[normalizedPath] = item;
       totalSize += item.size;
-      let namespaceVersions = map.indexedByNamespace[artifactNamespace] || new Map();
+      const namespaceVersions = map.indexedByNamespace[artifactNamespace] || new Map();
       map.indexedByNamespace[artifactNamespace] = namespaceVersions;
 
       let namespaceVersion = namespaceVersions.get(item.artifactVersion);
@@ -70,11 +70,11 @@ function getFilteredToBeDeleted(results, isDryRun) {
       namespaceVersions.set(item.artifactVersion, namespaceVersion);
       return map;
     }, {indexedByPath: {}, indexedByNamespace: {}});
-  let filteredArtifactsFound = [];
+  const filteredArtifactsFound = [];
   logger.debug("%s Before keeping the newest found %d artifacts with size of:%s %s", dryrunPrefix, Object.keys(resultMap.indexedByPath).length, filesize(totalSize), dryrunPrefix);
   totalSize = 0;
   Object.values(resultMap.indexedByNamespace).forEach((namespaceVersions) => {
-    let tempNamespaceVersions = new Map([...namespaceVersions.entries()]
+    const tempNamespaceVersions = new Map([...namespaceVersions.entries()]
       .sort((firstArtifactEntry, secondArtifactEntry) =>
         firstArtifactEntry[1].createdDate < secondArtifactEntry[1].createdDate ? 1 : -1));
     namespaceVersions.clear();
@@ -145,13 +145,10 @@ async function getArtifacts(olderThan, isDryRun) {
   if (foundItemsResult.items.length === 0) {
     logger.warn('Found no items');
   }
-  let itemsResult = await getFilteredToBeDeleted(foundItemsResult.items, isDryRun);
-
-  return itemsResult;
+  return getFilteredToBeDeleted(foundItemsResult.items, isDryRun);
 }
 
 async function deleteArtifacts(toBeDeletedFilteredArtifacts, isDryRun = true) {
-  let deletedSize = 0;
   logger.info('Artifacts are about to be deleted %s', isDryRun ? chalk.yellowBright.bgBlue('***Dry Run***') : '');
   let deletedArtifactsResponse = {totalSize: 0};
   try {
@@ -197,5 +194,5 @@ function spytRestMethodReferece(spyActor, method) {
 module.exports = {
   getArtifacts,
   deleteArtifacts,
-  spytRestMethodReferece: spytRestMethodReferece
+  spytRestMethodReferece
 };
