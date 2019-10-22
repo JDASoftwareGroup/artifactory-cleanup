@@ -47,7 +47,7 @@ function getFilteredToBeDeleted(results, isDryRun) {
   const resultMap = results.map(item => {
     let normalizedPathItem = getNormalizedPathItem(item);
     let res = semVerRe.exec(normalizedPathItem.name) || semVerNuget.exec(normalizedPathItem.name);
-    normalizedPathItem = {...normalizedPathItem, ...res.groups};
+    normalizedPathItem = {...normalizedPathItem, ...res.groups, isSource: !!res.isSource};
     normalizedPathItem.artifactNamespace = normalizedPathItem.repo + ":" + normalizedPathItem.artifactName;
     return normalizedPathItem;
   })
