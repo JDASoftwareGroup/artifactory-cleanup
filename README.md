@@ -34,6 +34,23 @@ specific date.
 If you run the utility in a dry run, only a report will be generated. Otherwise, the files that fit the criteria will
 be removed from your artifactory.  
 
+### How are packages and version determined by by the tool?
+The cleanup tool uses two approaches to determine what is the artifact name since Artifactory repository types vary
+and the parsing by layout is not exposed by the API. First we user a general [SemVer](https://semver.org/) 1
+parsing regular expression:
+
+`/^(?<artifactName>[^\.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z\.-]+)?\b$/`
+
+If not properly parsed we try to parse it as a [nuget package versioning](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning):
+
+`/^(?<artifactName>.*?)\.(?<artifactVersion>(\d+\.)+?([\d\w-]+))\.(?<artifactExtension>nupkg)$/`
+
+That way we extract:
+* Artifact name
+* Artifact version
+* Extension
+* Sources flag
+
 ## Prerequisites
 
 You will need to have [NPM](https://www.npmjs.com/get-npm) installed on your machine. 
