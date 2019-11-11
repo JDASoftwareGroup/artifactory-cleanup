@@ -1,20 +1,43 @@
 {
   "type": "file",
-  "$or": [
+  "$and": [
     {
-      "name": {
-        "$match": "*.jar"
-      }
+      "$or": [
+        {
+          "name": {
+            "$match": "*.*"
+          }
+        }
+      ]
     },
     {
-      "name": {
-        "$match": "*.tar.gz"
-      }
-    },
-    {
-      "name": {
-        "$match": "*.zip"
-      }
+      "$and": [
+        {
+          "name": {
+            "$nmatch": "maven-metadata.xml"
+          }
+        },
+        {
+          "name": {
+            "$nmatch": "index.yaml"
+          }
+        },
+        {
+          "name": {
+            "$nmatch": "manifest.json"
+          }
+        },
+        {
+          "name": {
+            "$nmatch": "simple.html"
+          }
+        },
+        {
+          "path": {
+            "$nmatch": "*.npm*"
+          }
+        }
+      ]
     }
   ],
   "$or": [
@@ -25,6 +48,6 @@
     }
   ],
   "repo": {
-    "$match": "${filter}"
+    "$match": "*${filter}*"
   }
 }

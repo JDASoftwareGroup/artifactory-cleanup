@@ -13,7 +13,7 @@ describe('Proxy Artifactory requests', () => {
     test('returns the correct formatted message',  () => {
       const logger = require('../logging');
       mockConsole(['log','info','warn','error']);
-      Date.now = jest.fn(() => new Date(Date.UTC(2017, 7, 9, 8)).valueOf());
+      Date.now = jest.fn(() => new Date("2017-08-09T13:00:00").valueOf());
       expect(logger.formatter({'level':'info','message':'hello'})).toBe('08/09/2017 1:00:00.00 PM info: hello');
     });
   });

@@ -2,8 +2,9 @@ module.exports = {
   "testEnvironment": "node",
   "coverageDirectory": "./coverage/",
     "collectCoverageFrom": [
-        "src/**/*.{js}",
+        "src/**/*.js",
         "!src/**/*.{.spec.js}",
+        "!src/test-fixtures/*.js",
         "!src/**/index.js"
     ],
     "testPathIgnorePatterns": [
@@ -25,5 +26,5 @@ module.exports = {
     }
   },
   "testResultsProcessor": "jest-sonar-reporter",
-  "setupTestFrameworkScriptFile": "jest-mock-console/dist/setupTestFramework.js"
+  "setupFilesAfterEnv": ["jest-mock-console/dist/setupTestFramework.js"]
 };

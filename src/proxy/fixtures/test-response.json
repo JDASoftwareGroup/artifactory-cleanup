@@ -12,6 +12,19 @@
     "updated": "2014-06-20T14:46:50.831Z"
   },
   {
+    "repo": "nuget-release-local",
+    "path": "",
+    "name": "ACME.Funny.Bear.Support.2019.1.0.1.nupkg",
+    "type": "file",
+    "size": 584668,
+    "created": "2014-06-20T14:47:04.736Z",
+    "created_by": "farquaad",
+    "modified": "2014-06-20T14:46:50.831Z",
+    "modified_by": "farquaad",
+    "updated": "2014-06-20T14:46:50.831Z",
+    "normalizedPath": "nuget-release-local/ACME.Funny.Bear.Support.2019.1.0.1.nupkg"
+  },
+  {
     "repo": "libs-release-local",
     "path": "com/hooli/fuzzyserver/funnyjdbc4/4.0",
     "name": "funnyjdbc4-4.0.pom",
