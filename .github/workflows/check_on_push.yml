@@ -1,0 +1,40 @@
+name: Run checks on push
+
+on:
+  [push]
+# CONFIGURATION
+# For help, go to https://github.com/Azure/Actions
+#
+# 1. Set up the following secrets in your repository:
+#   AZURE_WEBAPP_PUBLISH_PROFILE
+#
+# 2. Change these variables for your configuration:
+env:
+  NODE_VERSION: '10.16.3'                # set this to the node version to use
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: npm install
+        run: |
+          npm run test:coverage:deploy
+      - name: 'Scan with Sonarcloud'
+          uses: sonarsource/sonarcloud-github-action@master
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
