@@ -34,7 +34,7 @@ jobs:
       - name: npm install
         run: |
           npm run test:coverage:deploy
-      - name: 'Scan with Sonarcloud'
-          uses: sonarsource/sonarcloud-github-action@master
-          env:
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Scan with Sonarcloud
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
