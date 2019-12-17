@@ -67,7 +67,7 @@
     "lodash": "4.17.15",
     "moment": "2.24.0",
     "winston": "3.2.1",
-    "yargs": "15.0.1"
+    "yargs": "15.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
