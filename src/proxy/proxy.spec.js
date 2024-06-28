@@ -208,12 +208,12 @@ describe('Proxy Artifactory requests', () => {
     }
   }
 
-  function jsonCollectionMapper(key, value) {
-    return value instanceof Set || value instanceof Map ? {
-      "<kind>": value[Symbol.toStringTag],
-      "<mapData>": Array.from(value)
-    } : value;
-  }
+  // function jsonCollectionMapper(key, value) {
+  //   return value instanceof Set || value instanceof Map ? {
+  //     "<kind>": value[Symbol.toStringTag],
+  //     "<mapData>": Array.from(value)
+  //   } : value;
+  // }
 
   function mockKeepLast3ThresholdArgs() {
     const args = mockSimpleArgs();

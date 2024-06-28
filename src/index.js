@@ -50,7 +50,7 @@ import proxy from './proxy'
     let shouldDelete = true;
     let deleteConfirmationAnswer;
     if (args.isQuiet() || isDryRun) {
-      return;
+      return false;
     }
     try {
       deleteConfirmationAnswer = await inquirer.prompt({

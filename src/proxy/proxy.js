@@ -11,7 +11,6 @@ import queryText from './fixtures/query.json'
 
 const axios = axiosFactory.create(args.getConnectionDefaults());
 const queryEndpoint = 'search/aql';
-const itemPropertiesQueryEndpoint = 'storage/';
 const api = 'api/';
 const excludedArtifacts = ['maven-metadata.xml'];
 
@@ -47,11 +46,12 @@ function getFilteredToBeDeleted(results, isDryRun) {
     .filter(item => excludedArtifacts.every(
       excludedFile => !item.normalizedPath.endsWith(excludedFile)))
     .reduce((map, item) => {
+      const assignedMap = map;
       const {artifactNamespace, normalizedPath} = item;
-      map.indexedByPath[normalizedPath] = item;
+      assignedMap.indexedByPath[normalizedPath] = item;
       totalSize += item.size;
       const namespaceVersions = map.indexedByNamespace[artifactNamespace] || new Map();
-      map.indexedByNamespace[artifactNamespace] = namespaceVersions;
+      assignedMap.indexedByNamespace[artifactNamespace] = namespaceVersions;
 
       let namespaceVersion = namespaceVersions.get(item.artifactVersion);
       if (!namespaceVersion) {
@@ -73,7 +73,7 @@ function getFilteredToBeDeleted(results, isDryRun) {
     let addedItems = thresholdKeep;
     tempNamespaceVersions.forEach((tempNamespaceVersionsEntry, tempNamespaceVersionsKey) => {
       if (addedItems > 0) {
-        addedItems--;
+        addedItems-=1;
       } else {
         tempNamespaceVersionsEntry.items.forEach(artifact => {
           logger.silly("%s About to delete %s: size:%s %s", dryrunPrefix, artifact.normalizedPath, filesize(artifact.size), dryrunPrefix)
@@ -91,18 +91,18 @@ function getFilteredToBeDeleted(results, isDryRun) {
 }
 
 function populateNormalizedArtifact(item) {
-  const semVerRe = /^(?<artifactName>[^\.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z\.-]+)?\b$/;
+  const semVerRe = /^(?<artifactName>[^.]+)-(?<artifactVersion>.*?)(?<isSource>-sources)?\.(?<artifactExtension>[a-z.-]+)?\b$/;
   const semVerNuget = /^(?<artifactName>.*?)\.(?<artifactVersion>(\d+\.)+?([\d\w-]+))\.(?<artifactExtension>nupkg)$/;
   let normalizedPathItem = getNormalizedPathItem(item);
   const res = semVerRe.exec(normalizedPathItem.name) || semVerNuget.exec(normalizedPathItem.name);
   normalizedPathItem = {...normalizedPathItem, ...res.groups, isSource: !!res.isSource};
-  normalizedPathItem.artifactNamespace = normalizedPathItem.repo + ":" + normalizedPathItem.artifactName;
+  normalizedPathItem.artifactNamespace = `${normalizedPathItem.repo  }:${  normalizedPathItem.artifactName}`;
   return normalizedPathItem;
 }
 
-function getNormalizedPathItem(artifactItem) {
+function getNormalizedPathItem(_artifactItem) {
   let normalizedPath = '';
-
+  const artifactItem = _artifactItem;
   if (artifactItem.path === '.') {
     normalizedPath = `${artifactItem.repo}/${artifactItem.name}`;
   } else {
@@ -132,7 +132,7 @@ async function getArtifacts(olderThan, isDryRun) {
   });
   logger.debug('compiled query\n%s', compiledQuery);
   const query = `items.find(${compiledQuery}).include("*")`;
-  let foundItemsResult = {};
+  const foundItemsResult = {};
   try {
     const queryResults = await getAqlQueryResult(query);
     foundItemsResult.items = queryResults;
@@ -163,19 +163,18 @@ async function deleteArtifacts(toBeDeletedFilteredArtifacts, isDryRun = true) {
 }
 
 async function deleteItemAqlQuery(itemToDeleteResponse, isDryRun) {
-  let response;
   const deletedArtifactsResponse = {deletedArtifacts: [], totalSize: 0};
   const dryrunPrefix = isDryRun ? chalk.yellowBright.bgBlue('***') : '';
   const {deletedArtifacts} = deletedArtifactsResponse;
   try {
+    // eslint-disable-next-line no-restricted-syntax
     for (const itemToDelete of itemToDeleteResponse) {
       logger.silly('%s About to delete %o %s', dryrunPrefix, itemToDelete, dryrunPrefix);
       if (!isDryRun) {
-        response = await axios.delete(itemToDelete.normalizedPath);
+        // eslint-disable-next-line no-await-in-loop
+        await axios.delete(itemToDelete.normalizedPath);
         deletedArtifactsResponse.totalSize += itemToDelete.size;
         deletedArtifacts.push(itemToDelete);
-      } else {
-        response = await {status: 200};
       }
       logger.verbose(('%s Deleted %s(%s) %s'), dryrunPrefix, itemToDelete.normalizedPath,
         filesize(itemToDelete.size),
@@ -189,12 +188,12 @@ async function deleteItemAqlQuery(itemToDeleteResponse, isDryRun) {
 }
 
 
-function spytRestMethodReferece(spyActor, method) {
+function spytRestMethodReference(spyActor, method) {
   return spyActor(axios, method);
 }
 
 module.exports = {
   getArtifacts,
   deleteArtifacts,
-  spytRestMethodReferece
+  spytRestMethodReference
 };
