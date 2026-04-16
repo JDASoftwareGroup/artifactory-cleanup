@@ -1,7 +1,16 @@
 version: 2
 updates:
+  # 1. Configuration for non-security version updates
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-    open-pull-requests-limit: 1
+    # Ignore "patch" updates for non-security PRs
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+
+  # 2. Configuration for security updates
+  # Note: Security updates are enabled by default for all severities.
+  # To specifically manage them, you ensure your repository settings 
+  # have "Dependabot security updates" turned on.
