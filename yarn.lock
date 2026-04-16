@@ -4238,13 +4238,9 @@ prettier-eslint@^16.4.2:
     tslib "^2.8.1"
     vue-eslint-parser "^9.4.3"
 
-prettier@^1.18.2:
-  version "1.19.1"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-1.19.1.tgz"
-
-prettier@^3.5.3:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.8.1.tgz#edf48977cf991558f4fcbd8a3ba6015ba2a3a173"
+prettier@^3.5.3, prettier@^3.8.3:
+  version "3.8.3"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.8.3.tgz#560f2de55bf01b4c0503bc629d5df99b9a1d09b0"
 
 pretty-format@30.3.0:
   version "30.3.0"
