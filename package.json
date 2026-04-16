@@ -84,7 +84,7 @@
     "jest-mock-console": "^1.0.0",
     "jest-sonar-reporter": "^2.0.0",
     "lint-staged": "^10.0.0",
-    "nodemon": "2.0.22",
+    "nodemon": "3.1.14",
     "prettier": "^3.8.3",
     "prettier-eslint": "^16.4.2",
     "standard-version": "^9.5.0"
