@@ -69,7 +69,7 @@
     "lodash": "4.18.1",
     "moment": "2.29.4",
     "winston": "3.2.1",
-    "yargs": "15.4.1"
+    "yargs": "18.0.0"
   },
   "devDependencies": {
     "chalk": "3.0.0",
