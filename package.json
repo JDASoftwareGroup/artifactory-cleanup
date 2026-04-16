@@ -58,7 +58,7 @@
     ]
   },
   "dependencies": {
-    "acorn": "^6.2.1",
+    "acorn": "^8.16.0",
     "axios": "1.15.0",
     "axios-mock-adapter": "1.17.0",
     "dotenv": "8.2.0",
