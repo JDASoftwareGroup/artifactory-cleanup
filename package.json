@@ -76,7 +76,7 @@
     "codecov": "^3.6.1",
     "eslint": "10.2.0",
     "eslint-config-airbnb": "^17.1.1",
-    "eslint-config-prettier": "^6.5.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.20.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
