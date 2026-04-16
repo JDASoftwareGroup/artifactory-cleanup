@@ -1,16 +1,17 @@
 version: 2
 updates:
-  # 1. Configuration for non-security version updates
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-    # Ignore "patch" updates for non-security PRs
+    
+    # This ensures all weekly non-security updates are bunched into ONE PR
+    groups:
+      weekly-updates:
+        patterns:
+          - "*"
+
+    # Filters out minor noise to focus on meaningful updates
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
-
-  # 2. Configuration for security updates
-  # Note: Security updates are enabled by default for all severities.
-  # To specifically manage them, you ensure your repository settings 
-  # have "Dependabot security updates" turned on.
