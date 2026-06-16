@@ -119,7 +119,8 @@ describe('Test argv setting', () => {
     }
 
     function generateYargsMockValues() {
-        return Object.assign({
+        return {
+            ...yargs,
             argv: {
                 'a': MOCK_URL,
                 'u': MOCK_USER,
@@ -134,11 +135,9 @@ describe('Test argv setting', () => {
                 'p': MOCK_PREFIX_FILTER_SETTING,
                 'f': MOCK_REPOSITORY_FILTER_SETTING
             }
-        }, yargs)
+        };
     }
 
 
 });
-
-
 
