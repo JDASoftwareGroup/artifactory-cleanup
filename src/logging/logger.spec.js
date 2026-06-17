@@ -1,7 +1,7 @@
 
 
 import mockConsole from 'jest-mock-console';
-import mockArgs from "../test-fixtures/mock-args"
+import mockArgs from './test-fixtures/mock-args'
 
 
 describe('Proxy Artifactory requests', () => {

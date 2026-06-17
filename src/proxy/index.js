@@ -2,4 +2,4 @@
 
 import proxy from './proxy'
 
-module.exports = proxy;
+export default proxy;

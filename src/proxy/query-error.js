@@ -6,4 +6,4 @@ const QueryError = errorEx('QueryError', {
     url:       errorEx.append(' url %s')
 });
 
-module.exports = QueryError;
+export default QueryError;

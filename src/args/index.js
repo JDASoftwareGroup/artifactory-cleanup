@@ -2,4 +2,4 @@
 
 import args from './args'
 
-module.exports = args;
+export default args;

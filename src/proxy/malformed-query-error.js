@@ -7,4 +7,4 @@ const MalformedQueryError = errorEx('MalformedQueryError', {
     url:       errorEx.append(' url %s')
 });
 
-module.exports = MalformedQueryError;
+export default MalformedQueryError;

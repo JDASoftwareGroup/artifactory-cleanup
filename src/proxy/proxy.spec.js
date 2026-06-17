@@ -113,7 +113,7 @@ describe('Proxy Artifactory requests', () => {
     }
 
     function mockFilteredQueryResponse() {
-      const expectedResponse = require('./fixtures/test-response');
+      const expectedResponse = require('./fixtures/test-response.json');
       httpMock.onPost().reply(200, {"results": expectedResponse});
     }
   });
