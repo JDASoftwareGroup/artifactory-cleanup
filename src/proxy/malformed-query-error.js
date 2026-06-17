@@ -1,6 +1,6 @@
 
 
-import errorEx from 'error-ex'
+const errorEx = require('error-ex');
 
 const MalformedQueryError = errorEx('MalformedQueryError', {
     status:    errorEx.append(' status %s'),

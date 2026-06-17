@@ -1,5 +1,5 @@
 
 
-import logger from './logger'
+const logger = require('./logger');
 
 module.exports = logger;

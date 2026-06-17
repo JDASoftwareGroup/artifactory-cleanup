@@ -1,5 +1,5 @@
 
 
-import proxy from './proxy'
+const proxy = require('./proxy');
 
 module.exports = proxy;

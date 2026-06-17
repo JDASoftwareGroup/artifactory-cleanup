@@ -1,9 +1,9 @@
-import axios from 'axios'
-import fs from 'fs'
-import path from 'path'
-import MockAdapter from 'axios-mock-adapter'
-import mockLogger from '../test-fixtures/mock-logger'
-import QueryError from './query-error'
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const MockAdapter = require('axios-mock-adapter');
+const mockLogger = require('../test-fixtures/mock-logger');
+const QueryError = require('./query-error');
 
 const httpMock = new MockAdapter(axios);
 
@@ -113,7 +113,7 @@ describe('Proxy Artifactory requests', () => {
     }
 
     function mockFilteredQueryResponse() {
-      const expectedResponse = require('./fixtures/test-response');
+      const expectedResponse = require('./fixtures/test-response.json');
       httpMock.onPost().reply(200, {"results": expectedResponse});
     }
   });

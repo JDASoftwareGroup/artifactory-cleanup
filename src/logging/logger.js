@@ -1,7 +1,7 @@
 
 
-import winston from 'winston'
-import moment from 'moment'
+const winston = require('winston');
+const moment = require('moment');
 
 const { createLogger, format, transports } = winston;
 const { combine, timestamp, printf, splat, colorize } = format;
