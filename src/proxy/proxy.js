@@ -192,7 +192,7 @@ function spytRestMethodReference(spyActor, method) {
   return spyActor(axios, method);
 }
 
-module.exports = {
+export default {
   getArtifacts,
   deleteArtifacts,
   spytRestMethodReference
